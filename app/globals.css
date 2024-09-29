@@ -14,8 +14,9 @@
   opacity: 1;
 }
 
-.bg {
-  background-image: url("/blurry-shot-interior-shopping-mall.jpg");
+/* globals.css */
+html[lang="ar"] {
+  direction: rtl;
 }
 
 /* :root {

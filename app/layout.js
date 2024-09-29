@@ -1,6 +1,7 @@
-import { StoreProvider } from "@/lib/storeprovider";
+import { StoreProvider } from "@/lib/StoreProvider";
 import localFont from "next/font/local";
 import "./globals.css";
+import DashNavBar from "@/components/DashNavBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <StoreProvider>
+        <DashNavBar />
           {children}
         </StoreProvider>
       </body>

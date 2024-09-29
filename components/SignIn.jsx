@@ -1,15 +1,19 @@
 'use client'
 import { useState, useEffect } from "react";
 import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/icons";
+import background from '../public/images/background.jpg'
 import axios from "axios";
 import { loginSuccess } from "@/lib/user/userSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-
+import Image from "next/image";
+import Link from "next/link";
+import Cookies from "js-cookie";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 const SignIn = function() {
+    const cookies = Cookies
     const [inputType, setInputType] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -72,17 +76,16 @@ const SignIn = function() {
             const { token, data: { email } } = response.data;
             console.log(email)
             
-            if (token) {
-                    console.log('Token exists:', token);
-                dispatch(loginSuccess({ email, token }));
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    success: true,
-                }));
-                router.push('/')
-            }
-
-    };
+            console.log('Token exists:', token);
+            dispatch(loginSuccess({ email, token }));
+            cookies.set('email', email)
+            cookies.set('token', token)
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                success: true,
+            }));
+            router.push('/dashpage')
+        };
     
 
     useEffect(() => {
@@ -99,10 +102,19 @@ const SignIn = function() {
 
     return (
         <>
-        <div className="flex flex-col justify-center items-center  h-screen bg-center bg-cover">
+        <div className={`flex flex-col justify-center items-center h-dvh`}>
+            <div className="w-full  absolute -z-10">
+                <Image
+                src={background}
+                alt="image"
+                className="w-full h-dvh"
+                />
+            </div>
+
+
             <form onSubmit={handleSubmit} className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]">
                 <div>
-                    <h1 className="font-bold text-5xl text-[#606362]"><span className="text-[#1C65A2]">E</span>square²</h1>
+                    <Link href='/'><h1 className="font-bold text-5xl text-[#606362]"><span className="text-[#1C65A2]">E</span>square²</h1></Link>
                     <div className="my-8">
                         <h1 className="text-3xl font-bold">Welcome</h1>
                         <p className="text-[#606362]">Enter to get access to our products and services</p>

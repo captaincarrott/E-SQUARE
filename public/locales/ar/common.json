@@ -1,0 +1,13 @@
+{
+    "dashboard": {
+      "dashboard": "لوحة التحكم",
+      "title": "مرحبًا بك في لوحة التحكم",
+      "statistics": "إحصائيات",
+      "recentActivity": "النشاط الأخير",
+      "userInsights": "رؤى المستخدم",
+      "someStatsInfo": "...بعض المعلومات الإحصائية",
+      "recentUpdates": "...تحديثات حديثة",
+      "userDetails": "...تفاصيل المستخدم"
+    }
+  }
+  

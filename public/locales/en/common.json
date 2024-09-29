@@ -1,0 +1,13 @@
+{
+    "dashboard": {
+      "dashboard": "dashboard",
+      "title": "Welcome to the Dashboard",
+      "statistics": "Statistics",
+      "recentActivity": "Recent Activity",
+      "userInsights": "User Insights",
+      "someStatsInfo": "Some stats info...",
+      "recentUpdates": "Recent updates...",
+      "userDetails": "User details..."
+    }
+  }
+  
