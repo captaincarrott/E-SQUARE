@@ -35,7 +35,7 @@ const DashNavBar = function () {
 
   return (
     <div>
-      <div className="flex justify-between px-[25px] py-[10px]">
+      <div className="flex justify-between py-[10px]">
         <div className="text-center" onClick={() => router.push("/")}>
           <Link href="/dashpage">
             <h1 className="font-bold text-2xl text-[#606362] cursor-pointer">

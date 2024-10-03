@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLanguage}
-      className="px-4 py-2 bg-gray-800 text-white rounded"
+      className="p-2 bg-gray-800 text-white rounded"
     >
       {currentLocale === "en" ? "العربية" : "English"}
     </button>
