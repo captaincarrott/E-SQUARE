@@ -14,7 +14,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 import ar from '../public/locales/ar/translation.json'
 
 const SignIn = function() {
-    const currentLocale = Cookies.get('lang')
+    const currentLocale = Cookies.get('lang');
     const [inputType, setInputType] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -108,7 +108,7 @@ const SignIn = function() {
                 <Image
                 src={background}
                 alt="image"
-                className="w-full h-dvh"
+                className="w-full h-dvh object-cover"
                 />
             </div>
 
