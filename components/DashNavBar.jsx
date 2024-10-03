@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { setSideClose } from "@/lib/dashboard/sidebarSlice";
 import Cookies from "js-cookie";
@@ -35,7 +36,7 @@ const DashNavBar = function () {
 
   return (
     <div>
-      <div className="flex justify-between py-[10px]">
+      <div className="flex justify-between px-2 py-[10px]">
         <div className="text-center" onClick={() => router.push("/")}>
           <Link href="/dashpage">
             <h1 className="font-bold text-2xl text-[#606362] cursor-pointer">
@@ -51,7 +52,7 @@ const DashNavBar = function () {
           <LanguageSwitcher />
           {token ? (
             <button
-              className="bg-red-700 text-white p-2 rounded mx-2"
+              className="bg-red-700 text-white text-xs p-2 rounded mx-1"
               onClick={handleLogOut}
             >
               {currentLocale === "en" ? "Log out" : ar.navbar.logout}

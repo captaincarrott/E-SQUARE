@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLanguage}
-      className="p-2 bg-gray-800 text-white rounded"
+      className="p-2 text-xs bg-gray-800 text-white rounded"
     >
       {currentLocale === "en" ? "العربية" : "English"}
     </button>
