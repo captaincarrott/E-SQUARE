@@ -1,44 +1,66 @@
-'use client'
+"use client";
 import { logout } from "@/lib/user/userSlice";
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined, MenuOutlined } from "@ant-design/icons";
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  SearchOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 import { setSideClose } from "@/lib/dashboard/sidebarSlice";
 import Cookies from "js-cookie";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ar from "../public/locales/ar/translation.json";
+import { useSearchParams } from "next/navigation";
 
-const DashNavBar = function() {
-    const router = useRouter()
-    const dispatch = useDispatch()
-    const token = useSelector((state) => state.auth.token)
-    const sideClose = useSelector((state) => state.sidebar.sideClose)
-    const cookies = Cookies
-    function handleSidebar() {
-        dispatch(setSideClose(!sideClose)); 
-    }
-  const handleLogOut = function() {
+const DashNavBar = function () {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  // const sideClose = useSelector((state) => state.sidebar.sideClose)
+
+  const searchParams = useSearchParams();
+  const currentLocale = searchParams.get("lang") || Cookies.get("lang");
+
+  // function handleSidebar() {
+  //     dispatch(setSideClose(!sideClose));
+  // }
+  const handleLogOut = function () {
     dispatch(logout());
-    cookies.remove('email');
-    cookies.remove('token');
-  }
+    Cookies.remove("email");
+    Cookies.remove("token");
+  };
 
-    return (
+  return (
+    <div>
+      <div className="flex justify-between px-[25px] py-[10px]">
+        <div className="text-center" onClick={() => router.push("/")}>
+          <Link href="/dashpage">
+            <h1 className="font-bold text-2xl text-[#606362] cursor-pointer">
+              <span className="text-[#1C65A2]">
+                {currentLocale === "en" ? "D" : "ل"}
+              </span>
+              {currentLocale === "en" ? "ashboard" : "وحة التحكم"}
+            </h1>
+          </Link>
+        </div>
+        <div></div>
         <div>
-            <div className="flex justify-between px-[25px] py-[10px]">
-                <div className="text-center" onClick={() => router.push('/')}>
-                <Link href='/dashpage'><h1 className="font-bold text-2xl text-[#606362] cursor-pointer"><span className="text-[#1C65A2]">D</span>ashboard</h1></Link>
-                </div>
-                <div>
-            </div>
-            <div>
-                <LanguageSwitcher />
-                {token ? <button onClick={handleLogOut}>Log out</button> : null}
-            </div>
-                </div>
-        <div className="bg-gray-200 flex justify-center items-center">
-                    
-            {/* <div className="bg-white justify-between flex w-full p-[25px] ">
+          <LanguageSwitcher />
+          {token ? (
+            <button
+              className="bg-red-700 text-white p-2 rounded mx-2"
+              onClick={handleLogOut}
+            >
+              {currentLocale === "en" ? "Log out" : ar.navbar.logout}
+            </button>
+          ) : null}
+        </div>
+      </div>
+      <div className="bg-gray-200 flex justify-center items-center">
+        {/* <div className="bg-white justify-between flex w-full p-[25px] ">
                 {token && <MenuOutlined onClick={handleSidebar} className={`${sideClose ? 'rotate-0 transition-all' : ' rotate-90 transition-all'}`}/> }
 
                 <div className="hidden text-[#1A61A7] font-bold sm:block">
@@ -61,9 +83,9 @@ const DashNavBar = function() {
                     
                 </div>
             </div> */}
-        </div>
-        </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default DashNavBar;

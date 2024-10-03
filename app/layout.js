@@ -2,6 +2,7 @@ import { StoreProvider } from "@/lib/StoreProvider";
 import localFont from "next/font/local";
 import "./globals.css";
 import DashNavBar from "@/components/DashNavBar";
+import { cookies } from "next/headers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,11 +21,15 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const cookieStore = cookies();
+  const lang = cookieStore.get("lang")?.value || 'en';
+  const dir = lang === "ar" ? "rtl" : "ltr"; 
+
   return (
-    <html lang="en">
+    <html lang={lang} dir={dir}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <StoreProvider>
-        <DashNavBar />
+          <DashNavBar />
           {children}
         </StoreProvider>
       </body>

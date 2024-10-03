@@ -10,10 +10,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+// const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+import ar from '../public/locales/ar/translation.json'
 
 const SignIn = function() {
-    const cookies = Cookies
+    const currentLocale = Cookies.get('lang')
     const [inputType, setInputType] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -78,8 +79,8 @@ const SignIn = function() {
             
             console.log('Token exists:', token);
             dispatch(loginSuccess({ email, token }));
-            cookies.set('email', email)
-            cookies.set('token', token)
+            Cookies.set('email', email)
+            Cookies.set('token', token)
             setErrors((prevErrors) => ({
                 ...prevErrors,
                 success: true,
@@ -116,26 +117,26 @@ const SignIn = function() {
                 <div>
                     <Link href='/'><h1 className="font-bold text-5xl text-[#606362]"><span className="text-[#1C65A2]">E</span>square²</h1></Link>
                     <div className="my-8">
-                        <h1 className="text-3xl font-bold">Welcome</h1>
-                        <p className="text-[#606362]">Enter to get access to our products and services</p>
+                        <h1 className="text-3xl font-bold">{currentLocale === 'en' ? 'Welcome' : ar.signin.welcome}</h1>
+                        <p className="text-[#606362]">{currentLocale === 'en' ? 'Enter to get access to our products and services' : ar.signin.description}</p>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-4">
                 <div>
-                    <label htmlFor="email" className="font-semibold text-sm">Email <span className="text-red-600">*</span></label>
-                    <input onChange={handleChange} name="email" type="email" id="email" placeholder="Enter your email" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-                    {errors.emailError ? <span className="text-xs text-red-600">It should be a valid email address</span> : null}
+                    <label htmlFor="email" className="font-semibold text-sm">{currentLocale === 'en' ? 'Email' : ar.signin.email}<span className="text-red-600">*</span></label>
+                    <input onChange={handleChange} name="email" type="email" id="email" placeholder={currentLocale === 'en' ? "Enter your email" : ar.signin.enteremail} required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
+                    {errors.emailError ? <span className="text-xs text-red-600">{currentLocale === 'en' ? 'It should be a valid email address' : ar.signin.emailerror}</span> : null}
                 </div>
                     <div className="relative">
-                        <label htmlFor="password" className="font-semibold text-sm">Password <span className="text-red-600">*</span></label>
-                        <input onChange={handleChange} name="password" type={inputType ? 'text' : 'password'} id="password" placeholder="Enter password" required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-                        {inputType ? <EyeInvisibleOutlined className="absolute top-9 left-[calc(100%_-_32px)] text-xl" onClick={typeHandler}/> : <EyeOutlined className="absolute top-9 left-[calc(100%_-_32px)] text-xl" onClick={typeHandler}/>}
-                        {errors.passError ? <span className="text-xs text-red-600">Password should be 8-20 characters and include at least 1 letter, 1 number, and 1 special character</span> : null}
+                        <label htmlFor="password" className="font-semibold text-sm">{currentLocale === 'en' ? 'Password' : ar.signin.password} <span className="text-red-600">*</span></label>
+                        <input onChange={handleChange} name="password" type={inputType ? 'text' : 'password'} id="password" placeholder={currentLocale === 'en' ? "Enter password" : ar.signin.enterpass} required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
+                        {inputType ? <EyeInvisibleOutlined className={`absolute top-9 ${currentLocale === 'en' ? 'left-[calc(100%_-_32px)]' : 'left-4'} text-xl`} onClick={typeHandler}/> : <EyeOutlined className={`absolute top-9 ${currentLocale === 'en' ? 'left-[calc(100%_-_32px)]' : 'left-4'} text-xl`} onClick={typeHandler}/>}
+                        {errors.passError ? <span className="text-xs text-red-600">{currentLocale === 'en' ? 'Password should be 8-20 characters and include at least 1 letter, 1 number, and 1 special character' : ar.signin.passerror}</span> : null}
                     </div>
                 </div>
                 <div className="flex flex-col justify-center items-center relative">
                     <div className="mt-8 mb-4"> 
-                        <input type="submit" value="Sign In" className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
+                        <input type="submit" value={currentLocale === 'en' ? 'Sign In' : ar.signin.signin} className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
                     </div>
                 </div>
             </form>

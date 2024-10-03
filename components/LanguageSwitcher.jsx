@@ -1,28 +1,40 @@
-'use client';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+"use client";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export default function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentLocale = searchParams.get('lang') || 'en';
+
+  const currentLocale = searchParams.get("lang") || Cookies.get("lang") || "en";
 
   const toggleLanguage = () => {
-    const nextLocale = currentLocale === 'en' ? 'ar' : 'en';
-    console.log(currentLocale);
-    
-    const params = new URLSearchParams(searchParams);
-    params.set('lang', nextLocale);
+    const newLocale = currentLocale === "en" ? "ar" : "en";
+    Cookies.set("lang", newLocale);
 
+    const params = new URLSearchParams(searchParams);
+    params.set("lang", newLocale);
     router.push(`${pathname}?${params.toString()}`);
+    router.refresh();
   };
+
+  useEffect(() => {
+    const urlLang = searchParams.get("lang");
+
+    if (urlLang && urlLang !== Cookies.get("lang")) {
+      Cookies.set("lang", urlLang);
+    }
+    router.refresh();
+  }, [searchParams]);
 
   return (
     <button
       onClick={toggleLanguage}
       className="px-4 py-2 bg-gray-800 text-white rounded"
     >
-      {currentLocale === 'en' ? 'العربية' : 'English'}
+      {currentLocale === "en" ? "العربية" : "English"}
     </button>
   );
 }
