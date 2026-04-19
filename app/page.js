@@ -11,11 +11,11 @@ export default async function Home() {
   return (
     <ProtectedRoutes route='/auth'>
     <div className="">
-      {/* <Navbar /> */}
+      <Navbar />
       <main className="">
-        {/* <Sidebar />
-        <CartSidebar /> */}
-          <Dashboard product={product}/>
+        {/* <Sidebar /> */}
+        {/* <CartSidebar /> */}
+          {/* <Dashboard product={product}/> */}
       </main>
     </div>
     </ProtectedRoutes>

@@ -1,5 +1,6 @@
 "use client";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -8,26 +9,26 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentLocale = searchParams.get("lang") || Cookies.get("lang") || "en";
+  const [currentLocale, setCurrentLocale] = useState("en");
+
+  useEffect(() => {
+    const urlLang = searchParams?.get("lang");
+    const cookieLang = Cookies.get("lang");
+
+    setCurrentLocale(urlLang || cookieLang || "en");
+  }, [searchParams]);
 
   const toggleLanguage = () => {
     const newLocale = currentLocale === "en" ? "ar" : "en";
+
     Cookies.set("lang", newLocale);
 
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams?.toString());
     params.set("lang", newLocale);
+
     router.push(`${pathname}?${params.toString()}`);
     router.refresh();
   };
-
-  useEffect(() => {
-    const urlLang = searchParams.get("lang");
-
-    if (urlLang && urlLang !== Cookies.get("lang")) {
-      Cookies.set("lang", urlLang);
-    }
-    router.refresh();
-  }, [searchParams]);
 
   return (
     <button

@@ -1,27 +1,35 @@
-'use client'
+'use client';
+
 import { useState, useEffect } from "react";
 import { EyeOutlined, EyeInvisibleOutlined, CheckOutlined } from "@ant-design/icons";
-import background from '../public/images/background.jpg'
-import axios from "axios";
 import { loginSuccess } from "@/lib/user/userSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-// const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-import ar from '../public/locales/ar/translation.json'
+import background from "../public/images/background.jpg";
+import ar from "../public/locales/ar/translation.json";
 
-const SignIn = function() {
-    const currentLocale = Cookies.get('lang');
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+export default function SignIn() {
+
+    const [currentLocale, setCurrentLocale] = useState('en');
+
+    useEffect(() => {
+        const lang = Cookies.get('lang');
+        if (lang) setCurrentLocale(lang);
+    }, []);
+
     const [inputType, setInputType] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
+
     const [errors, setErrors] = useState({
-        emailError: '',
-        passError: '',
-        success: '',
+        emailError: false,
+        passError: false,
+        success: false,
     });
 
     const [formData, setFormData] = useState({
@@ -31,124 +39,189 @@ const SignIn = function() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (e.target.name === 'email') {
-            if (emailRegex.test(e.target.value) || e.target.value === '') {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    emailError: false,
-                }));
-            } else {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    emailError: true,
-                }));
-            }
+
+        if (e.target.name === "email") {
+            setErrors((prev) => ({
+                ...prev,
+                emailError:
+                    e.target.value !== "" && !emailRegex.test(e.target.value),
+            }));
         }
 
-        if (e.target.name === 'password') {
-            if (e.target.value || e.target.value === '') {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    passError: false,
-                }));
-            } else {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    passError: true,
-                }));
-            }
+        if (e.target.name === "password") {
+            setErrors((prev) => ({
+                ...prev,
+                passError: e.target.value === "",
+            }));
         }
     };
 
-    const typeHandler = function() {
-        setInputType(!inputType);
-    };
-
-    const handleSubmit = async (e) => {
+    // ✅ STATIC LOGIN (بدون API)
+    const handleSubmit = (e) => {
         e.preventDefault();
-        
-            const response = await axios.post('https://backend.profferdeals.com/api/admin/login', {
-                email: formData.email, 
-                password: formData.password,
-            });
-    
-            console.log(response.data);
-            console.log(formData)
-            const { token, data: { email } } = response.data;
-            console.log(email)
-            
-            console.log('Token exists:', token);
-            dispatch(loginSuccess({ email, token }));
-            Cookies.set('email', email)
-            Cookies.set('token', token)
-            setErrors((prevErrors) => ({
-                ...prevErrors,
+
+        if (formData.email && formData.password) {
+
+            const fakeUser = {
+                email: formData.email,
+                token: "fake-token-123456"
+            };
+
+            dispatch(loginSuccess(fakeUser));
+
+            Cookies.set("email", fakeUser.email);
+            Cookies.set("token", fakeUser.token);
+
+            setErrors((prev) => ({
+                ...prev,
                 success: true,
             }));
-            router.push('/dashpage')
-        };
-    
+
+            router.push("/dashpage");
+
+        } else {
+            setErrors((prev) => ({
+                ...prev,
+                emailError: !formData.email,
+                passError: !formData.password,
+            }));
+        }
+    };
 
     useEffect(() => {
         if (errors.success) {
             const timer = setTimeout(() => {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
+                setErrors((prev) => ({
+                    ...prev,
                     success: false,
                 }));
             }, 3000);
+
             return () => clearTimeout(timer);
         }
     }, [errors.success]);
 
+    const typeHandler = () => {
+        setInputType((prev) => !prev);
+    };
+
     return (
-        <>
-        <div className={`flex flex-col justify-center items-center h-dvh`}>
-            <div className="w-full  absolute -z-10">
+        <div className="flex flex-col justify-center items-center h-dvh">
+
+            <div className="w-full absolute -z-10">
                 <Image
-                src={background}
-                alt="image"
-                className="w-full h-dvh object-cover"
+                    src={background}
+                    alt="background"
+                    className="w-full h-dvh object-cover"
                 />
             </div>
 
+            <form
+                onSubmit={handleSubmit}
+                className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]"
+            >
+                <Link href="/">
+                    <h1 className="font-bold text-5xl text-[#606362]">
+                        <span className="text-[#1C65A2]">E</span>square²
+                    </h1>
+                </Link>
 
-            <form onSubmit={handleSubmit} className="my-8 flex flex-col rounded-[5px] bg-white p-4 sm:p-8 w-[90%] max-w-[576px] border-l-4 border-[#1C65A2]">
+                <div className="my-8">
+                    <h1 className="text-3xl font-bold">
+                        {currentLocale === "en" ? "Welcome" : ar.signin.welcome}
+                    </h1>
+
+                    <p className="text-[#606362]">
+                        {currentLocale === "en"
+                            ? "Enter to get access to our products and services"
+                            : ar.signin.description}
+                    </p>
+                </div>
+
+                {/* EMAIL */}
                 <div>
-                    <Link href='/'><h1 className="font-bold text-5xl text-[#606362]"><span className="text-[#1C65A2]">E</span>square²</h1></Link>
-                    <div className="my-8">
-                        <h1 className="text-3xl font-bold">{currentLocale === 'en' ? 'Welcome' : ar.signin.welcome}</h1>
-                        <p className="text-[#606362]">{currentLocale === 'en' ? 'Enter to get access to our products and services' : ar.signin.description}</p>
+                    <label className="font-semibold text-sm">
+                        {currentLocale === "en" ? "Email" : ar.signin.email}
+                        <span className="text-red-600">*</span>
+                    </label>
+
+                    <input
+                        name="email"
+                        type="email"
+                        onChange={handleChange}
+                        required
+                        className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px]"
+                        placeholder={
+                            currentLocale === "en"
+                                ? "Enter your email"
+                                : ar.signin.enteremail
+                        }
+                    />
+
+                    {errors.emailError && (
+                        <span className="text-xs text-red-600">
+                            {currentLocale === "en"
+                                ? "Invalid email"
+                                : ar.signin.emailerror}
+                        </span>
+                    )}
+                </div>
+
+                {/* PASSWORD */}
+                <div className="relative mt-4">
+                    <label className="font-semibold text-sm">
+                        {currentLocale === "en"
+                            ? "Password"
+                            : ar.signin.password}
+                        <span className="text-red-600">*</span>
+                    </label>
+
+                    <input
+                        name="password"
+                        type={inputType ? "text" : "password"}
+                        onChange={handleChange}
+                        required
+                        className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px]"
+                        placeholder={
+                            currentLocale === "en"
+                                ? "Enter password"
+                                : ar.signin.enterpass
+                        }
+                    />
+
+                    <div
+                        onClick={typeHandler}
+                        className="absolute top-9 right-3 cursor-pointer"
+                    >
+                        {inputType ? (
+                            <EyeInvisibleOutlined />
+                        ) : (
+                            <EyeOutlined />
+                        )}
                     </div>
+
+                    {errors.passError && (
+                        <span className="text-xs text-red-600">
+                            {currentLocale === "en"
+                                ? "Password required"
+                                : ar.signin.passerror}
+                        </span>
+                    )}
                 </div>
-                <div className="flex flex-col space-y-4">
-                <div>
-                    <label htmlFor="email" className="font-semibold text-sm">{currentLocale === 'en' ? 'Email' : ar.signin.email}<span className="text-red-600">*</span></label>
-                    <input onChange={handleChange} name="email" type="email" id="email" placeholder={currentLocale === 'en' ? "Enter your email" : ar.signin.enteremail} required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-                    {errors.emailError ? <span className="text-xs text-red-600">{currentLocale === 'en' ? 'It should be a valid email address' : ar.signin.emailerror}</span> : null}
-                </div>
-                    <div className="relative">
-                        <label htmlFor="password" className="font-semibold text-sm">{currentLocale === 'en' ? 'Password' : ar.signin.password} <span className="text-red-600">*</span></label>
-                        <input onChange={handleChange} name="password" type={inputType ? 'text' : 'password'} id="password" placeholder={currentLocale === 'en' ? "Enter password" : ar.signin.enterpass} required className="p-2 w-full border-2 border-[#E5E7EB] rounded-[5px] block placeholder:text-xs focus:outline-none"/>
-                        {inputType ? <EyeInvisibleOutlined className={`absolute top-9 ${currentLocale === 'en' ? 'left-[calc(100%_-_32px)]' : 'left-4'} text-xl`} onClick={typeHandler}/> : <EyeOutlined className={`absolute top-9 ${currentLocale === 'en' ? 'left-[calc(100%_-_32px)]' : 'left-4'} text-xl`} onClick={typeHandler}/>}
-                        {errors.passError ? <span className="text-xs text-red-600">{currentLocale === 'en' ? 'Password should be 8-20 characters and include at least 1 letter, 1 number, and 1 special character' : ar.signin.passerror}</span> : null}
-                    </div>
-                </div>
-                <div className="flex flex-col justify-center items-center relative">
-                    <div className="mt-8 mb-4"> 
-                        <input type="submit" value={currentLocale === 'en' ? 'Sign In' : ar.signin.signin} className="text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"/>
-                    </div>
-                </div>
+
+                <input
+                    type="submit"
+                    value={currentLocale === "en" ? "Sign In" : ar.signin.signin}
+                    className="mt-8 text-white p-2 cursor-pointer rounded-[5px] w-32 bg-[#1C65A2]"
+                />
             </form>
-            {!errors.emailError && !errors.passError ?
-                <div className={`fixed top-[-20px] mx-auto p-2 bg-[#1C65A2] rounded-[5px] space-x-2 w-[80%] sm:max-w-[400px] text-base ${errors.success ? 'animate-success' : 'hidden-success'}`}>
-                    <CheckOutlined className="text-white" />
-                    <p className="inline-block text-white">Success!</p>
-                </div>
-            : null}
-        </div>
-        </>
-    );
-};
 
-export default SignIn;
+            {errors.success && (
+                <div className="fixed top-5 p-2 bg-[#1C65A2] rounded-[5px] text-white flex items-center gap-2">
+                    <CheckOutlined />
+                    Success!
+                </div>
+            )}
+        </div>
+    );
+}
