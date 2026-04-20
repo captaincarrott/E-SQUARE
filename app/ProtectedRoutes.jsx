@@ -1,31 +1,30 @@
 "use client";
 
-import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 export default function ProtectedRoutes({ children, route }) {
   const router = useRouter();
-  const token = useSelector((state) => state.auth.token);
+  const reduxToken = useSelector((state) => state.auth.token);
 
-  const [loading, setLoading] = useState(true);
+  const [isAllowed, setIsAllowed] = useState(null);
 
   useEffect(() => {
     const cookieToken = Cookies.get("token");
 
-    if (!cookieToken && !token) {
+    if (!cookieToken && !reduxToken) {
       router.replace(route);
+      setIsAllowed(false);
+    } else {
+      setIsAllowed(true);
     }
+  }, [reduxToken, router, route]);
 
-    setLoading(false);
-  }, [token, router, route]);
+  if (isAllowed === null) return null;
 
-  if (loading) return null;
-
-  if (!Cookies.get("token") && !token) {
-    return null;
-  }
+  if (!isAllowed) return null;
 
   return children;
 }

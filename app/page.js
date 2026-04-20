@@ -1,23 +1,13 @@
 import Navbar from "@/components/Navbar";
-import { useSelector } from "react-redux";
-import Sidebar from "@/components/Sidebar";
-import CartSidebar from "@/components/CartSidebar";
-import Dashboard from "@/components/DashBoard";
-import ProtectedRoutes from "./ProtectedRoutes";
-import DashNavBar from "@/components/DashNavBar";
-import DashFetch from "@/components/DashFetch";
-export default async function Home() {
-  const product = await DashFetch()
+
+export default function Home() {
   return (
-    <ProtectedRoutes route='/auth'>
-    <div className="">
+    <div>
       <Navbar />
-      <main className="">
-        {/* <Sidebar /> */}
-        {/* <CartSidebar /> */}
-          {/* <Dashboard product={product}/> */}
+
+      <main>
+        <h1>Home Page</h1>
       </main>
     </div>
-    </ProtectedRoutes>
   );
 }

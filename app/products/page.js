@@ -1,12 +1,8 @@
-import fetchProducts from '../../lib/products/fetchProducts'
-import ProductsClient from '@/components/ProductsClient';
+import fetchProducts from "@/lib/products/fetchProducts";
+import ProductsList from "@/components/ProductsList";
 
 export default async function ProductsPage() {
   const products = await fetchProducts();
 
-  return (
-    <div>
-      <ProductsClient products={products} />
-    </div>
-  );
+  return <ProductsList products={products} />;
 }
