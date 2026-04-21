@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { logout } from "@/lib/user/userSlice";
 import {
   SearchOutlined,
   ShoppingCartOutlined,
@@ -17,8 +16,9 @@ const Navbar = function () {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const token = useSelector((state) => state.auth.token);
   const cartSideClose = useSelector((state) => state.cartAside.cartAsideClose);
+
+  const cartItems = useSelector((state) => state.cart.items);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -26,9 +26,8 @@ const Navbar = function () {
     dispatch(setCartAside(!cartSideClose));
   }
 
-  function handleLogOut() {
-    dispatch(logout());
-  }
+  // 🧠 total items count
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="bg-gray-200">
@@ -47,20 +46,15 @@ const Navbar = function () {
             <li>
               <Link href="/">Home</Link>
             </li>
-            <li className="cursor-pointer">About Us</li>
-            <li className="cursor-pointer">Services</li>
+            <li>
+              <Link href="/about">About Us</Link>
+            </li>
+            <li>
+              <Link href="/services">Services</Link>
+            </li>
             <li>
               <Link href="/products">Our Products</Link>
             </li>
-
-            {token && (
-              <li
-                className="cursor-pointer"
-                onClick={() => router.push("/dashpage")}
-              >
-                Dashboard
-              </li>
-            )}
           </ul>
         </div>
 
@@ -68,31 +62,31 @@ const Navbar = function () {
         <div className="flex items-center gap-4">
           <SearchOutlined className="text-xl cursor-pointer hover:text-blue-500 transition" />
 
+          {/* USER */}
           <UserOutlined
             onClick={() => router.push("/auth")}
             className="text-xl cursor-pointer hover:text-blue-500 transition"
           />
 
-          <ShoppingCartOutlined
-            onClick={handleCart}
-            className="text-xl cursor-pointer hover:text-blue-500 transition"
-          />
+          {/* CART + BADGE */}
+          <div className="relative">
+            <ShoppingCartOutlined
+              onClick={handleCart}
+              className="text-xl cursor-pointer hover:text-blue-500 transition"
+            />
+
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </div>
 
           {/* BURGER */}
           <MenuOutlined
             onClick={() => setMenuOpen(true)}
             className="text-xl cursor-pointer md:hidden"
           />
-
-          {/* LOGOUT (DESKTOP) */}
-          {token && (
-            <button
-              onClick={handleLogOut}
-              className="hidden md:block text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-            >
-              Log out
-            </button>
-          )}
         </div>
       </div>
 
@@ -124,36 +118,19 @@ const Navbar = function () {
             Home
           </Link>
 
-          <p className="cursor-pointer">About Us</p>
-          <p className="cursor-pointer">Services</p>
+          <p>About Us</p>
+          <p>Services</p>
 
           <Link href="/products" onClick={() => setMenuOpen(false)}>
             Our Products
           </Link>
 
-          {token && (
-            <p
-              className="cursor-pointer"
-              onClick={() => {
-                router.push("/dashpage");
-                setMenuOpen(false);
-              }}
-            >
-              Dashboard
-            </p>
-          )}
-
-          {token && (
-            <button
-              onClick={() => {
-                handleLogOut();
-                setMenuOpen(false);
-              }}
-              className="mt-4 bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
-            >
-              Log out
-            </button>
-          )}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="mt-4 bg-red-500 text-white p-2 rounded"
+          >
+            Close Menu
+          </button>
         </div>
       </div>
     </div>

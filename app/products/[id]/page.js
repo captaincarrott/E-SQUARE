@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AddToCartButton from "@/components/AddToCartButton";
 
 async function fetchProduct(id) {
   const res = await fetch(`https://dummyjson.com/products/${id}`, {
@@ -36,9 +37,8 @@ export default async function ProductDetails({ params }) {
             ${product.price}
           </p>
 
-          <button className="bg-[#1C65A2] text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-            Add to Cart 🛒
-          </button>
+          {/* 🔥 BUTTON CLIENT COMPONENT */}
+          <AddToCartButton product={product} />
         </div>
       </div>
     </div>
