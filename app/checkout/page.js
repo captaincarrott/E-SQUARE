@@ -43,7 +43,6 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* RIGHT - ORDER SUMMARY */}
         <div className="bg-white p-6 rounded-xl shadow h-fit">
           <h2 className="text-2xl font-bold mb-4">Order Summary 🛒</h2>
 
@@ -63,13 +62,11 @@ export default function CheckoutPage() {
                 </div>
               ))}
 
-              {/* TOTAL */}
               <div className="flex justify-between font-bold mt-4 text-lg">
                 <p>Total</p>
                 <p className="text-[#1C65A2]">${total.toFixed(2)}</p>
               </div>
 
-              {/* BUTTON */}
               <button
                 onClick={handleOrder}
                 className="bg-[#1C65A2] text-white w-full py-3 rounded mt-4 hover:bg-blue-700 transition"

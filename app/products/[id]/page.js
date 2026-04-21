@@ -27,7 +27,6 @@ export default async function ProductDetails({ params }) {
           />
         </div>
 
-        {/* INFO */}
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
 

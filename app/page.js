@@ -18,7 +18,6 @@ export default async function Home() {
         </a>
       </section>
 
-      {/* PRODUCTS */}
       <section className="p-6">
         <h2 className="text-2xl font-bold mb-4">Featured Products</h2>
         <ProductsList products={products.slice(0, 6)} />

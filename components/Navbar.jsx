@@ -25,7 +25,7 @@ const Navbar = function () {
     dispatch(setCartAside(!cartSideClose));
   }
 
-  // 🔍 search function
+  // search function
   const goToSearch = () => {
     const trimmed = search.trim();
     if (!trimmed) return;
@@ -35,14 +35,14 @@ const Navbar = function () {
     setMenuOpen(false);
   };
 
-  // ⌨️ Enter search
+  // Enter search
   const handleSearch = (e) => {
     if (e.key === "Enter") {
       goToSearch();
     }
   };
 
-  // 🛒 cart count
+  // cart count
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -76,7 +76,7 @@ const Navbar = function () {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
-          {/* 🔍 SEARCH (DESKTOP) */}
+          {/* SEARCH (DESKTOP) */}
           <div className="hidden md:flex items-center relative border rounded-md overflow-hidden">
             <input
               onKeyDown={handleSearch}
@@ -94,7 +94,7 @@ const Navbar = function () {
             />
           </div>
 
-          {/* 🛒 CART */}
+          {/* CART */}
           <div className="relative">
             <ShoppingCartOutlined
               onClick={handleCart}
@@ -108,7 +108,7 @@ const Navbar = function () {
             )}
           </div>
 
-          {/* 🍔 BURGER */}
+          {/* BURGER */}
           <MenuOutlined
             onClick={() => setMenuOpen(true)}
             className="text-xl cursor-pointer md:hidden"
