@@ -37,8 +37,10 @@ export default async function ProductDetails({ params }) {
             ${product.price}
           </p>
 
-          {/* 🔥 BUTTON CLIENT COMPONENT */}
-          <AddToCartButton product={product} />
+          <AddToCartButton
+            product={product}
+            className="bg-[#1C65A2] text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          />
         </div>
       </div>
     </div>

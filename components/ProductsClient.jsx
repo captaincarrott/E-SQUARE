@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useSelector, useDispatch } from 'react-redux';
-import { setPosts, setDataIsLoaded } from '@/lib/products/productSlice';
-import { useEffect } from 'react';
-import Spinner from '@/components/Spinner';
-import Card from '@/components/Card';
-import Navbar from '@/components/Navbar';
+import { useSelector, useDispatch } from "react-redux";
+import { setPosts, setDataIsLoaded } from "@/lib/products/productSlice";
+import { useEffect } from "react";
+import Spinner from "@/components/Spinner";
+import Card from "@/components/Card";
+import Navbar from "@/components/Navbar";
 
 const ProductsClient = ({ products }) => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const ProductsClient = ({ products }) => {
 
   useEffect(() => {
     dispatch(setPosts(products));
-    dispatch(setDataIsLoaded(true))
+    dispatch(setDataIsLoaded(true));
   }, [dispatch, products]);
 
   if (!dataIsLoaded) {
@@ -53,5 +53,3 @@ const ProductsClient = ({ products }) => {
 };
 
 export default ProductsClient;
-
-

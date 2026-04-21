@@ -7,7 +7,17 @@ export default function AddToCartButton({ product }) {
   const dispatch = useDispatch();
 
   function handleAdd() {
-    dispatch(addToCart(product));
+    console.log("🔥 CLICKED");
+    console.log("PRODUCT:", product);
+
+    dispatch(
+      addToCart({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.images?.[0] || product.thumbnail,
+      }),
+    );
   }
 
   return (

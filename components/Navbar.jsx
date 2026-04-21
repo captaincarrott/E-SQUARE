@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   SearchOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
@@ -17,16 +16,33 @@ const Navbar = function () {
   const dispatch = useDispatch();
 
   const cartSideClose = useSelector((state) => state.cartAside.cartAsideClose);
-
   const cartItems = useSelector((state) => state.cart.items);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   function handleCart() {
     dispatch(setCartAside(!cartSideClose));
   }
 
-  // 🧠 total items count
+  // 🔍 search function
+  const goToSearch = () => {
+    const trimmed = search.trim();
+    if (!trimmed) return;
+
+    router.push(`/products?query=${encodeURIComponent(trimmed)}`);
+    setSearch("");
+    setMenuOpen(false);
+  };
+
+  // ⌨️ Enter search
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      goToSearch();
+    }
+  };
+
+  // 🛒 cart count
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -58,17 +74,27 @@ const Navbar = function () {
           </ul>
         </div>
 
-        {/* ICONS */}
-        <div className="flex items-center gap-4">
-          <SearchOutlined className="text-xl cursor-pointer hover:text-blue-500 transition" />
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-3">
+          {/* 🔍 SEARCH (DESKTOP) */}
+          <div className="hidden md:flex items-center relative border rounded-md overflow-hidden">
+            <input
+              onKeyDown={handleSearch}
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="px-3 py-2 pr-10 outline-none w-[220px] md:w-[300px]"
+            />
 
-          {/* USER */}
-          <UserOutlined
-            onClick={() => router.push("/auth")}
-            className="text-xl cursor-pointer hover:text-blue-500 transition"
-          />
+            {/* ICON INSIDE INPUT */}
+            <SearchOutlined
+              onClick={goToSearch}
+              className="absolute right-3 text-gray-500 hover:text-[#1C65A2] cursor-pointer transition"
+            />
+          </div>
 
-          {/* CART + BADGE */}
+          {/* 🛒 CART */}
           <div className="relative">
             <ShoppingCartOutlined
               onClick={handleCart}
@@ -82,7 +108,7 @@ const Navbar = function () {
             )}
           </div>
 
-          {/* BURGER */}
+          {/* 🍔 BURGER */}
           <MenuOutlined
             onClick={() => setMenuOpen(true)}
             className="text-xl cursor-pointer md:hidden"
@@ -92,7 +118,7 @@ const Navbar = function () {
 
       {/* OVERLAY */}
       <div
-        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/40 z-40 transition ${
           menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setMenuOpen(false)}
@@ -112,25 +138,38 @@ const Navbar = function () {
           ✕
         </button>
 
+        {/* 🔍 SEARCH (MOBILE) */}
+        <div className="flex items-center relative border rounded-md overflow-hidden mb-6">
+          <input
+            onKeyDown={handleSearch}
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-3 py-2 pr-10 w-full outline-none"
+          />
+
+          {/* ICON INSIDE INPUT */}
+          <SearchOutlined
+            onClick={goToSearch}
+            className="absolute right-3 text-gray-500 hover:text-[#1C65A2] cursor-pointer transition"
+          />
+        </div>
+
         {/* MENU */}
         <div className="flex flex-col gap-5 text-[#1A61A7] font-semibold">
           <Link href="/" onClick={() => setMenuOpen(false)}>
             Home
           </Link>
-
-          <p>About Us</p>
-          <p>Services</p>
-
+          <Link href="/about" onClick={() => setMenuOpen(false)}>
+            About Us
+          </Link>
+          <Link href="/services" onClick={() => setMenuOpen(false)}>
+            Services
+          </Link>
           <Link href="/products" onClick={() => setMenuOpen(false)}>
             Our Products
           </Link>
-
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="mt-4 bg-red-500 text-white p-2 rounded"
-          >
-            Close Menu
-          </button>
         </div>
       </div>
     </div>

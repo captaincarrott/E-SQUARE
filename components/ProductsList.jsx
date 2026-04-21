@@ -2,16 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export default function ProductsList({ products }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
       {products.map((product) => (
-        <Link href={`/products/${product.id}`}>
-          <div
-            key={product.id}
-            className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-4"
-          >
+        <div
+          key={product.id}
+          className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-4"
+        >
+          {/* IMAGE (link فقط هنا أو العنوان) */}
+          <Link href={`/products/${product.id}`}>
             <div className="w-full h-40 mb-4">
               <Image
                 src={product.images?.[0] || "/placeholder.png"}
@@ -23,14 +25,17 @@ export default function ProductsList({ products }) {
             </div>
 
             <h2 className="text-sm font-bold line-clamp-2">{product.title}</h2>
+          </Link>
 
-            <p className="text-blue-600 font-semibold mt-2">${product.price}</p>
+          <p className="text-blue-600 font-semibold mt-2">${product.price}</p>
 
-            <button className="mt-3 w-full bg-[#1C65A2] text-white py-2 rounded-md hover:bg-blue-800 transition">
+          {/* 🔥 BUTTON خارج Link */}
+          <Link href={`/products/${product.id}`}>
+            <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-black transition">
               View Product
             </button>
-          </div>
-        </Link>
+          </Link>
+        </div>
       ))}
     </div>
   );
