@@ -7,7 +7,7 @@ export default function AddToCartButton({ product }) {
   const dispatch = useDispatch();
 
   function handleAdd() {
-    console.log("🔥 CLICKED");
+    console.log("CLICKED");
     console.log("PRODUCT:", product);
 
     dispatch(

@@ -11,7 +11,6 @@ export default function ProductsList({ products }) {
           key={product.id}
           className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-4"
         >
-          {/* IMAGE (link فقط هنا أو العنوان) */}
           <Link href={`/products/${product.id}`}>
             <div className="w-full h-40 mb-4">
               <Image
@@ -28,7 +27,6 @@ export default function ProductsList({ products }) {
 
           <p className="text-blue-600 font-semibold mt-2">${product.price}</p>
 
-          {/* 🔥 BUTTON خارج Link */}
           <Link href={`/products/${product.id}`}>
             <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-black transition">
               View Product
